@@ -62,7 +62,7 @@ type ConnectFunction = (req: Request, resp: Response, next: any) => void;
 
 function process(func: Function, thisArg: any): (req: Request, resp: Response) => Promise<void> {
     return async (req: Request, resp: Response) => {
-        var args = Object.assign({}, req.query, req.body);
+        var args = Object.assign({}, req, req.query, req.body);
         let ps = getFunctionParams(func);
         ps = ps.map(i => args[i]);
         try {
