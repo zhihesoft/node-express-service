@@ -19,19 +19,19 @@ export function api(path: string, method: string = "POST") {
     };
 }
 
-export function register(app: Express, module: any, guardian: ConnectFunction) {
+export function register(app: Express, module: any) {
     const map: Map<string, any> = Reflect.getMetadata(service_router_token, module.prototype);
     if (!map) {
         console.error("no router of service found in " + module);
         return;
     }
     for (const item of map) {
-        const router = createRouter(item[1], guardian);
+        const router = createRouter(item[1]);
         app.use(item[0], router);
     }
 }
 
-function createRouter(handler: any, guardian: ConnectFunction): Router {
+function createRouter(handler: any): Router {
     const router: Router = Router();
     const map: Map<string, ServiceHandlerInfo> = Reflect.getMetadata(service_api_map, Object.getPrototypeOf(handler));
     if (!map) {
