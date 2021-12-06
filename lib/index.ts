@@ -13,9 +13,9 @@ export function service<T>(path: string, token: InjectionToken<T>) {
     }
 }
 
-export function api(path: string, security: boolean = true, method: string = "POST") {
+export function api(path: string, method: string = "POST") {
     return function (target: any, propertyKey: string) {
-        defineRequestMetadata(path, target, propertyKey, security, method);
+        defineRequestMetadata(path, target, propertyKey, method);
     };
 }
 
@@ -51,11 +51,7 @@ function createRouter(handler: any, guardian: ConnectFunction): Router {
                 routeFunc = router.use;
             }
             routeFunc = routeFunc.bind(router);
-            if (item.security) {
-                routeFunc(item.path, guardian, process(func, handler));
-            } else {
-                routeFunc(item.path, process(func, handler));
-            }
+            routeFunc(item.path, process(func, handler));
         }
     }
     return router;
@@ -92,10 +88,9 @@ function getHandlerMetadata(target: any, propertyKey: string): ServiceHandlerInf
     return map.get(propertyKey)!;
 }
 
-function defineRequestMetadata(path: string, target: any, propertyKey: string, security: boolean, method: string) {
+function defineRequestMetadata(path: string, target: any, propertyKey: string, method: string) {
     const info = getHandlerMetadata(target, propertyKey);
     info.path = path;
-    info.security = security;
     info.func = propertyKey;
     info.method = method;
 };
@@ -115,7 +110,6 @@ interface ServiceHandlerInfo {
     path: string;
     func: string;
     method: string;
-    security: boolean;
 }
 
 const service_router_token = "SERVICE_ROUTER_TOKEN";
