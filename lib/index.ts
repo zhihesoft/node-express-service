@@ -65,8 +65,13 @@ function process(func: Function, thisArg: any): (req: Request, resp: Response) =
         ps = ps.map(i => args[i]);
         try {
             const ret = await func.call(thisArg, ...ps);
-            resp.json(ret);
+            if (typeof ret === "string") {
+                resp.send(ret)
+            } else {
+                resp.json(ret);
+            }
         } catch (err) {
+            console.error(`process error: ${err}`)
             resp.status(400).json({ err });
         }
     }
