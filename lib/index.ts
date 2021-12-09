@@ -60,6 +60,7 @@ function createRouter(handler: any): Router {
 function process(func: Function, thisArg: any): (req: Request, resp: Response) => Promise<void> {
     return async (req: Request, resp: Response) => {
         var args = Object.assign({}, req.query, req.body);
+        args["jwt"] = (req as any).user;
         let ps = getFunctionParams(func);
         ps = ps.map(i => args[i]);
         try {
