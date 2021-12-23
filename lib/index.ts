@@ -70,9 +70,9 @@ function process(func: Function, thisArg: any): (req: Request, resp: Response) =
             } else {
                 resp.json(ret);
             }
-        } catch (err) {
-            console.error(`process error: ${err}`)
-            resp.status(400).json({ err });
+        } catch (err: any) {
+            console.error(`process error: ${err}`);
+            resp.status(400).json(JSON.stringify(err));
         }
     }
 }
